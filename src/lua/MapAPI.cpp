@@ -37,7 +37,15 @@
 #include "entities/Bomb.h"
 #include "entities/Fire.h"
 #include "lowlevel/Sound.h"
+#ifdef ANDROID
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#else
 #include <lua.hpp>
+#endif
 
 /**
  * @brief Shows the dialog box and starts displaying a dialog.

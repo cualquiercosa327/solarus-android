@@ -18,7 +18,16 @@
 #include "lowlevel/FileTools.h"
 #include "lowlevel/Debug.h"
 #include "lowlevel/StringConcat.h"
+
+#ifdef ANDROID
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#else
 #include <lua.hpp>
+#endif
 
 const std::string DialogResource::file_name = "text/dialogs.lua";
 std::map<std::string, Dialog> DialogResource::dialogs;

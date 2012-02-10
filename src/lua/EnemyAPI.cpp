@@ -23,7 +23,15 @@
 #include "lowlevel/Geometry.h"
 #include "Game.h"
 #include "Map.h"
+#ifdef ANDROID
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#else
 #include <lua.hpp>
+#endif
 
 /**
  * @brief Returns the name of the enemy.

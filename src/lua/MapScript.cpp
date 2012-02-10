@@ -22,7 +22,15 @@
 #include "Treasure.h"
 #include <sstream>
 #include <iomanip>
+#ifdef ANDROID
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#else
 #include <lua.hpp>
+#endif
 
 /**
  * @brief Creates a map script.

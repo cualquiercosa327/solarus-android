@@ -23,7 +23,15 @@
 #include "Map.h"
 #include "Timer.h"
 #include "Sprite.h"
+#ifdef ANDROID
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#else
 #include <lua.hpp>
+#endif
 #include <sstream>
 #include <cstdarg>
 

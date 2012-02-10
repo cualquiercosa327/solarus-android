@@ -16,7 +16,7 @@
  */
 #ifndef SOLARUS_NOMAIN
 
-#ifdef __APPLE__
+#ifdef __APPLE__ || ANDROID
   #include "SDL.h" // SDLmain
 #endif
 

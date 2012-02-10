@@ -22,7 +22,16 @@
 #include "StringResource.h"
 #include "DialogResource.h"
 #include <physfs.h>
+
+#ifdef ANDROID
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#else
 #include <lua.hpp>
+#endif
 
 std::string FileTools::language_code;
 std::string FileTools::default_language_code;

@@ -18,7 +18,15 @@
 #include "entities/CustomEnemy.h"
 #include "lowlevel/Debug.h"
 #include "Game.h"
+#ifdef ANDROID
+extern "C" {
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
+}
+#else
 #include <lua.hpp>
+#endif
 
 /**
  * @brief Constructor.

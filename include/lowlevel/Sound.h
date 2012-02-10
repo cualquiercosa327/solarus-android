@@ -20,8 +20,14 @@
 #include "Common.h"
 #include <list>
 #include <map>
+#ifdef ANDROID
+#include <AL/alc.h>
+#include <AL/al.h>
+#else
 #include <al.h>
 #include <alc.h>
+#endif
+
 #include <vorbis/vorbisfile.h>
 
 /**
