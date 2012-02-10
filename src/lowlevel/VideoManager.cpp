@@ -25,11 +25,11 @@
 
 VideoManager* VideoManager::instance = NULL;
 
-#if defined(__APPLE) || defined(ANDROID)
+#if defined(__APPLE)
 const int VideoManager::surface_flags = SDL_HWSURFACE | SDL_DOUBLEBUF;
 #else
 /* on Mac OS X the SDL hardware surfaces are buggy */
-/* on Android, using HWSURFACE is slow. */
+
 const int VideoManager::surface_flags = SDL_SWSURFACE;
 #endif
 
@@ -357,8 +357,8 @@ void VideoManager::blit_centered(Surface* src_surface, Surface* dst_surface) {
  */
 void VideoManager::blit_stretched(Surface* src_surface, Surface* dst_surface) {
 
-  SDL_Surface* src_internal_surface = src_surface->get_internal_surface();
-  SDL_Surface* dst_internal_surface = dst_surface->get_internal_surface();
+  SDL_Surface* src_internal_surface = src_surface->get_internal_hw_surface();
+  SDL_Surface* dst_internal_surface = dst_surface->get_internal_hw_surface();
   SDL_Surface* surface_to_draw;
 
 #ifndef __APPLE
@@ -409,8 +409,8 @@ void VideoManager::blit_stretched(Surface* src_surface, Surface* dst_surface) {
  */
 void VideoManager::blit_scale2x(Surface* src_surface, Surface* dst_surface) {
 
-  SDL_Surface* src_internal_surface = src_surface->get_internal_surface();
-  SDL_Surface* dst_internal_surface = dst_surface->get_internal_surface();
+  SDL_Surface* src_internal_surface = src_surface->get_internal_hw_surface();
+  SDL_Surface* dst_internal_surface = dst_surface->get_internal_hw_surface();
   SDL_Surface* surface_to_draw;
 
 #ifndef __APPLE

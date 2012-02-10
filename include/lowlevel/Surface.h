@@ -49,10 +49,13 @@ class Surface {
   private:
 
     SDL_Surface* internal_surface;               /**< the SDL_Surface encapsulated */
+    SDL_Surface* internal_hw_surface;               /**< the HW SDL_Surface encapsulated */
+
     bool internal_surface_created;               /**< indicates that internal_surface was allocated from this class */
-
+    bool internal_hw_surface_created;
     SDL_Surface* get_internal_surface();
-
+    SDL_Surface* get_internal_hw_surface();
+    void create_hw_surface(); 
   public:
 
     Surface(int width, int height);
@@ -74,6 +77,7 @@ class Surface {
     void blit(Surface* destination, const Rectangle& dst_position);
     void blit(const Rectangle& src_position, Surface* destination);
     void blit(const Rectangle& src_position, Surface* destination, const Rectangle& dst_position);
+
 };
 
 #endif

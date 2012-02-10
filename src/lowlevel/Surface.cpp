@@ -28,14 +28,11 @@
  * @param height the height in pixels
  */
 Surface::Surface(int width, int height):
-  internal_surface_created(true) {
-#ifdef ANDROID
-  this->internal_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height,
-      32, 0, 0, 0, 0);
-#else
+  internal_surface_created(true), internal_hw_surface_created(false) {
+
   this->internal_surface = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height,
       32, 0, 0, 0, 0);
-#endif
+  create_hw_surface();
 }
 
 /**
@@ -44,7 +41,7 @@ Surface::Surface(int width, int height):
  * @param base_directory the base directory to use
  */
 Surface::Surface(const std::string& file_name, ImageDirectory base_directory):
-  internal_surface_created(true) {
+  internal_surface_created(true), internal_hw_surface_created(false) {
 
   std::string prefix = "";
   bool language_specific = false;
@@ -67,6 +64,8 @@ Surface::Surface(const std::string& file_name, ImageDirectory base_directory):
   SDL_RWclose(rw);
 
   Debug::check_assertion(internal_surface != NULL, StringConcat() << "Cannot load image '" << prefixed_file_name << "'");
+
+  create_hw_surface();
 }
 
 /**
@@ -79,8 +78,8 @@ Surface::Surface(const std::string& file_name, ImageDirectory base_directory):
  */
 Surface::Surface(SDL_Surface* internal_surface):
   internal_surface(internal_surface),
-  internal_surface_created(false) {
-
+  internal_surface_created(false), internal_hw_surface_created(false) {
+  internal_hw_surface = internal_surface;
 }
 
 /**
@@ -90,8 +89,8 @@ Surface::Surface(SDL_Surface* internal_surface):
 Surface::Surface(const Surface& other):
   internal_surface(SDL_ConvertSurface(other.internal_surface,
       other.internal_surface->format, other.internal_surface->flags)),
-  internal_surface_created(true) {
-
+  internal_surface_created(true), internal_hw_surface_created(false) {
+  create_hw_surface();
 }
 
 /**
@@ -102,6 +101,10 @@ Surface::~Surface() {
   if (internal_surface_created) {
     SDL_FreeSurface(internal_surface);
   }
+  if (internal_hw_surface_created) {
+    SDL_FreeSurface(internal_hw_surface);
+  }
+  
 }
 
 /**
@@ -137,7 +140,7 @@ const Rectangle Surface::get_size() {
  * @param color the transparency color to set
  */
 void Surface::set_transparency_color(Color& color) {
-  SDL_SetColorKey(internal_surface, SDL_SRCCOLORKEY, color.get_internal_value());
+  SDL_SetColorKey(internal_hw_surface, SDL_SRCCOLORKEY, color.get_internal_value());
 }
 
 /**
@@ -152,7 +155,7 @@ void Surface::set_opacity(int opacity) {
     opacity = 127;
   }
 
-  SDL_SetAlpha(internal_surface, SDL_SRCALPHA, opacity);
+  SDL_SetAlpha(internal_hw_surface, SDL_SRCALPHA, opacity);
 }
 
 /**
@@ -169,11 +172,11 @@ void Surface::set_opacity(int opacity) {
 void Surface::set_clipping_rectangle(const Rectangle& clipping_rectangle) {
 
   if (clipping_rectangle.get_width() == 0) {
-    SDL_SetClipRect(internal_surface, NULL);
+    SDL_SetClipRect(internal_hw_surface, NULL);
   }
   else {
     Rectangle copy = clipping_rectangle;
-    SDL_SetClipRect(internal_surface, copy.get_internal_rect());
+    SDL_SetClipRect(internal_hw_surface, copy.get_internal_rect());
   }
 }
 
@@ -182,7 +185,8 @@ void Surface::set_clipping_rectangle(const Rectangle& clipping_rectangle) {
  * @param color a color
  */
 void Surface::fill_with_color(Color& color) {
-  SDL_FillRect(internal_surface, NULL, color.get_internal_value());
+  SDL_FillRect(internal_hw_surface, NULL, color.get_internal_value());
+
 }
 
 /**
@@ -192,7 +196,7 @@ void Surface::fill_with_color(Color& color) {
  */
 void Surface::fill_with_color(Color& color, const Rectangle& where) {
   Rectangle where2 = where;
-  SDL_FillRect(internal_surface, where2.get_internal_rect(), color.get_internal_value());
+  SDL_FillRect(internal_hw_surface, where2.get_internal_rect(), color.get_internal_value());
 }
 
 /**
@@ -203,7 +207,7 @@ void Surface::fill_with_color(Color& color, const Rectangle& where) {
  * @param destination the destination surface
  */
 void Surface::blit(Surface* destination) {
-  SDL_BlitSurface(internal_surface, NULL, destination->internal_surface, NULL);
+  SDL_BlitSurface(internal_hw_surface, NULL, destination->internal_hw_surface, NULL);
 }
 
 /**
@@ -214,7 +218,7 @@ void Surface::blit(Surface* destination) {
 void Surface::blit(Surface* dst, const Rectangle& dst_position) {
 
   Rectangle dst_position2(dst_position);
-  SDL_BlitSurface(internal_surface, NULL, dst->internal_surface, dst_position2.get_internal_rect());
+  SDL_BlitSurface(internal_hw_surface, NULL, dst->internal_hw_surface, dst_position2.get_internal_rect());
 }
 
 /**
@@ -228,7 +232,7 @@ void Surface::blit(Surface* dst, const Rectangle& dst_position) {
 void Surface::blit(const Rectangle& src_position, Surface* dst) {
 
   Rectangle src_position2(src_position);
-  SDL_BlitSurface(internal_surface, src_position2.get_internal_rect(), dst->internal_surface, NULL);
+  SDL_BlitSurface(internal_hw_surface, src_position2.get_internal_rect(), dst->internal_hw_surface, NULL);
 }
 
 /**
@@ -241,7 +245,7 @@ void Surface::blit(const Rectangle &src_position, Surface *dst, const Rectangle 
 
   Rectangle src_position2(src_position);
   Rectangle dst_position2(dst_position);
-  SDL_BlitSurface(internal_surface, src_position2.get_internal_rect(), dst->internal_surface, dst_position2.get_internal_rect());
+  SDL_BlitSurface(internal_hw_surface, src_position2.get_internal_rect(), dst->internal_hw_surface, dst_position2.get_internal_rect());
 }
 
 /**
@@ -254,4 +258,25 @@ void Surface::blit(const Rectangle &src_position, Surface *dst, const Rectangle 
 SDL_Surface * Surface::get_internal_surface() {
   return internal_surface;
 }
+/**
+  * @brief Returns the HW SDL Surface encapsulated
+  */
+SDL_Surface* Surface::get_internal_hw_surface() {
+  return internal_hw_surface;
+}
+/**
+ * Create the hardware SDL_surface
+ */
+void Surface::create_hw_surface()
+{
+  if (this->internal_surface->format->Amask)
+  {
+    internal_hw_surface = SDL_DisplayFormatAlpha(internal_surface);
+  }
+  else
+  {
+    internal_hw_surface = SDL_DisplayFormat(internal_surface);
+  }
+  internal_hw_surface_created = true;
 
+}
