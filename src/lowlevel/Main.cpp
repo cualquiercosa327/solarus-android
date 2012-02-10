@@ -41,7 +41,11 @@
  */
 int main(int argc, char **argv) {
 
-  Solarus(argc, argv).main_loop();
+  int argc2 = 2;
+  char **argv2 = new char*[2];
+  argv2[0] = argv[0];
+  argv2[1] = "/sdcard/solarus";
+  Solarus(argc2, argv2).main_loop();
   return 0;
 }
 
