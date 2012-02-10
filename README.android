@@ -8,6 +8,9 @@ How to build for Android:
 
 3)Cd to the "project/jni" folder and clone "libmodplug-android" to "project/jni/modplug": git clone git@github.com:sam101/libmodplug-android.git modplug
 
+4)Get the last "SDL_image" from SDL image website, modify the 
+"LOCAL_MODULE" to "sdl_image" and the "LOCAL_SHARED_LIBRARIES" to "sdl"
+
 4)Edit "Settings.mk" and "SettingsTemplate.mk" and add "physfs  modplug" to the "APP_MODULES" var.
 
 5)clone the last "solarus-android" code to the "project/jni/application/solarus" folder, and do a symlink: "ln -s solarus project/jni/application/src" (MUST be the relative link)
