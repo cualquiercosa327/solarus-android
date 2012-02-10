@@ -29,9 +29,13 @@
  */
 Surface::Surface(int width, int height):
   internal_surface_created(true) {
-
+#ifdef ANDROID
+  this->internal_surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height,
+      32, 0, 0, 0, 0);
+#else
   this->internal_surface = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height,
       32, 0, 0, 0, 0);
+#endif
 }
 
 /**

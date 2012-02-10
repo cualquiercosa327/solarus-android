@@ -25,10 +25,11 @@
 
 VideoManager* VideoManager::instance = NULL;
 
-#ifndef __APPLE
+#if defined(__APPLE) || defined(ANDROID)
 const int VideoManager::surface_flags = SDL_HWSURFACE | SDL_DOUBLEBUF;
 #else
 /* on Mac OS X the SDL hardware surfaces are buggy */
+/* on Android, using HWSURFACE is slow. */
 const int VideoManager::surface_flags = SDL_SWSURFACE;
 #endif
 
