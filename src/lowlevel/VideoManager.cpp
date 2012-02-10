@@ -189,11 +189,7 @@ void VideoManager::set_initial_video_mode() {
  * @brief Sets the default video mode.
  */
 void VideoManager::set_default_video_mode() {
-#ifdef ANDROID
-  set_video_mode(WINDOWED_NORMAL);
-#else
   set_video_mode(WINDOWED_STRETCHED);
-#endif
 }
 
 /**
