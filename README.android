@@ -9,7 +9,7 @@ How to build for Android:
 3)Cd to the "project/jni" folder and clone "libmodplug-android" to "project/jni/modplug": git clone git@github.com:sam101/libmodplug-android.git modplug
 
 4)Get the last "SDL_image" from SDL image website, modify the 
-"LOCAL_MODULE" to "sdl_image" and the "LOCAL_SHARED_LIBRARIES" to "sdl"
+"LOCAL_MODULE" to "sdl_image" and the "LOCAL_SHARED_LIBRARIES" to "sdl". Don't set "-O3", the game would crash.
 
 4)Edit "Settings.mk" and "SettingsTemplate.mk" and add "physfs  modplug" to the "APP_MODULES" var.
 
