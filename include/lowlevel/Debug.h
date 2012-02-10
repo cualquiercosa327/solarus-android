@@ -21,7 +21,9 @@
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
-
+#ifdef ANDROID
+#include <android/log.h>
+#endif
 #ifndef NDEBUG
 #define SOLARUS_ASSERT(condition, message) Debug::check_assertion(condition, message)
 #else
@@ -56,7 +58,9 @@ class Debug {
  * @param os the output stream to write (default is std::cout)
  */
 inline void Debug::print(const std::string& message, std::ostream& os) {
-
+#ifdef ANDROID
+	__android_log_print(ANDROID_LOG_INFO, "Solarus engine", message.c_str());
+#endif
 #ifndef NDEBUG
   os << message << std::endl;
 #endif
@@ -76,6 +80,9 @@ inline void Debug::print(const std::string& message, std::ostream& os) {
 inline void Debug::check_assertion(bool assertion, const std::string& error_message) {
 
   if (!assertion) {
+#ifdef ANDROID
+	__android_log_print(ANDROID_LOG_INFO, "Solarus engine", error_message.c_str());
+#endif
     die(error_message);
   }
 }
