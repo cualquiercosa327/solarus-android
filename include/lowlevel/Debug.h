@@ -60,7 +60,6 @@ class Debug {
 inline void Debug::print(const std::string& message, std::ostream& os) {
 #ifdef ANDROID
 	__android_log_print(ANDROID_LOG_INFO, "Solarus engine", message.c_str());
-#endif
 #else
 #ifndef NDEBUG
   os << message << std::endl;
