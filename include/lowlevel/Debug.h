@@ -60,9 +60,10 @@ class Debug {
 inline void Debug::print(const std::string& message, std::ostream& os) {
 #ifdef ANDROID
 	__android_log_print(ANDROID_LOG_INFO, "Solarus engine", message.c_str());
-#endif
+#else
 #ifndef NDEBUG
   os << message << std::endl;
+#endif
 #endif
 }
 
@@ -82,8 +83,9 @@ inline void Debug::check_assertion(bool assertion, const std::string& error_mess
   if (!assertion) {
 #ifdef ANDROID
 	__android_log_print(ANDROID_LOG_INFO, "Solarus engine", error_message.c_str());
-#endif
+#else
     die(error_message);
+#endif
   }
 }
 
@@ -96,9 +98,12 @@ inline void Debug::check_assertion(bool assertion, const std::string& error_mess
  * @param error_message the error message to attach to the exception
  */
 inline void Debug::die(const std::string& error_message) {
-
+#ifdef ANDROID
+	__android_log_print(ANDROID_LOG_INFO, "Solarus engine", error_message.c_str());
+#else
   std::ofstream out("error.txt");
   out << error_message << std::endl << std::flush;
+#endif
   throw std::logic_error(error_message);
 }
 

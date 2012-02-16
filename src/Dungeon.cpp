@@ -19,6 +19,7 @@
 #include "lowlevel/FileTools.h"
 #include "lowlevel/Rectangle.h"
 #include "lowlevel/IniFile.h"
+#include "lowlevel/StringConcat.h"
 #include <sstream>
 
 /**
