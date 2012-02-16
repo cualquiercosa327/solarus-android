@@ -25,11 +25,8 @@
 
 VideoManager* VideoManager::instance = NULL;
 
-<<<<<<< HEAD
 #if defined(__APPLE)
-=======
-#ifndef __APPLE__
->>>>>>> 3dbba85ce3c87212ceaebda6718a27ffabbd6229
+
 const int VideoManager::surface_flags = SDL_HWSURFACE | SDL_DOUBLEBUF;
 #else
 /* on Mac OS X the SDL hardware surfaces are buggy */
