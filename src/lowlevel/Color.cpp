@@ -34,8 +34,8 @@ Color Color::cyan;
 /**
  * @brief Initializes the color static fields.
  */
-void Color::initialize() {
-
+void Color::initialize() 
+{
   format_surface = SDL_CreateRGBSurface(SDL_HWSURFACE, 1, 1,
       32, 0, 0, 0, 0);
 
