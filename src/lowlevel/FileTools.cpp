@@ -98,11 +98,11 @@ void FileTools::initialize(int argc, char** argv) {
   std::string write_dir = (std::string) "/sdcard/solarus/" +  ini.get_string_value("write_dir");
 #else
   std::string write_dir = (std::string) ".solarus/" + ini.get_string_value("write_dir");
-#endif
   PHYSFS_mkdir(write_dir.c_str());
-
   // then set this directory as the write directory
   write_dir = (std::string) PHYSFS_getUserDir() + write_dir;
+#endif
+
   if (!PHYSFS_setWriteDir(write_dir.c_str())) {
     Debug::die(StringConcat() << "Cannot set write dir '" << write_dir << "': " << PHYSFS_getLastError());
   }
