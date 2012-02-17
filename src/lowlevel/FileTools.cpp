@@ -95,7 +95,7 @@ void FileTools::initialize(int argc, char** argv) {
   IniFile ini("quest.dat", IniFile::READ);
   ini.set_group("info");
 #ifdef ANDROID
-  std::string write_dir = (std::string) "/sdcard/solarus/" +  ini.get_string_value("write_dir");
+  std::string write_dir = (std::string) "/sdcard/app-data/org.solarusengine/solarus/" +  ini.get_string_value("write_dir");
 #else
   std::string write_dir = (std::string) ".solarus/" + ini.get_string_value("write_dir");
   PHYSFS_mkdir(write_dir.c_str());
